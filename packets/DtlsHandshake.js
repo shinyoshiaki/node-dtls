@@ -1,25 +1,23 @@
-
 "use strict";
 
-var util = require( 'util' );
-var Packet = require( './Packet' );
-var PacketSpec = require( './PacketSpec' );
-var dtls = require( '../dtls' );
+var util = require("util");
+var Packet = require("./Packet");
+var PacketSpec = require("./PacketSpec");
+var dtls = require("../dtls");
 
-var DtlsHandshake = function( data ) {
-    Packet.call( this, data );
+var DtlsHandshake = function (data) {
+    Packet.call(this, data);
 };
-util.inherits( DtlsHandshake, Packet );
+util.inherits(DtlsHandshake, Packet);
 
-DtlsHandshake.overhead = ( 8 + 24 + 16 + 24 ) / 8;
+DtlsHandshake.overhead = (8 + 24 + 16 + 24) / 8;
 DtlsHandshake.prototype.type = dtls.MessageType.handshake;
 DtlsHandshake.prototype.spec = new PacketSpec([
-
-    { msgType: 'uint8' },
-    { length: 'uint24' },
-    { messageSeq: 'uint16' },
-    { fragmentOffset: 'uint24' },
-    { body: 'var24' }
+    { msgType: "uint8" },
+    { length: "uint24" },
+    { messageSeq: "uint16" },
+    { fragmentOffset: "uint24" },
+    { body: "var24" },
 ]);
 
 module.exports = DtlsHandshake;

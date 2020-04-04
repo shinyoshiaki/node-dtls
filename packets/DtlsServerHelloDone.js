@@ -1,15 +1,14 @@
-
 "use strict";
 
-var util = require( 'util' );
-var Packet = require( './Packet' );
-var PacketSpec = require( './PacketSpec' );
-var dtls = require( '../dtls' );
+var util = require("util");
+var Packet = require("./Packet");
+var PacketSpec = require("./PacketSpec");
+var dtls = require("../dtls");
 
-var DtlsServerHelloDone = function( data ) {
-    Packet.call( this, data );
+var DtlsServerHelloDone = function (data) {
+    Packet.call(this, data);
 };
-util.inherits( DtlsServerHelloDone, Packet );
+util.inherits(DtlsServerHelloDone, Packet);
 
 DtlsServerHelloDone.prototype.messageType = dtls.HandshakeType.serverHelloDone;
 DtlsServerHelloDone.prototype.spec = new PacketSpec([
@@ -17,4 +16,3 @@ DtlsServerHelloDone.prototype.spec = new PacketSpec([
 ]);
 
 module.exports = DtlsServerHelloDone;
-
