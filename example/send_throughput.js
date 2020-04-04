@@ -33,10 +33,10 @@ if (!argv.udp) {
     var server = dtls.createServer({
         type: "udp4",
         key: pem,
-        cert: pem,
+        cert: pem
     });
     server.bind(argv.port);
-    server.on("secureConnection", function (socket) {
+    server.on("secureConnection", function(socket) {
         serverSocket = socket;
         onServerConnect();
     });
@@ -47,15 +47,15 @@ if (!argv.udp) {
         onClientConnect
     );
 } else {
-    var onUdpBind = function (socket) {
+    var onUdpBind = function(socket) {
         socket.port = socket.udp.address().port;
         socket.udp.on("message", onUdpMessage.bind(null, socket));
         socket.emit("bind");
     };
-    var onUdpMessage = function (socket, msg) {
+    var onUdpMessage = function(socket, msg) {
         socket.emit("message", msg);
     };
-    var udpSend = function (socket, target, msg) {
+    var udpSend = function(socket, target, msg) {
         socket.udp.send(msg, 0, msg.length, target.port, "127.0.0.1");
     };
     serverSocket = new events.EventEmitter();
@@ -66,7 +66,7 @@ if (!argv.udp) {
     clientSocket.send = udpSend.bind(null, clientSocket, serverSocket);
     // bind the client first, and then the server,
     // so that first ack will be sent to client and received
-    clientSocket.on("bind", function () {
+    clientSocket.on("bind", function() {
         onClientConnect();
         serverSocket.on("bind", onServerConnect);
         serverSocket.udp.bind(onUdpBind.bind(null, serverSocket));

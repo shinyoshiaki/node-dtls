@@ -5,17 +5,17 @@ var crypto = require("crypto");
 
 var SequenceNumber = require("../SequenceNumber");
 
-describe("SequenceNumber", function () {
-    describe("#ctor()", function () {
-        it("should init correctly", function () {
+describe("SequenceNumber", function() {
+    describe("#ctor()", function() {
+        it("should init correctly", function() {
             var sn = new SequenceNumber();
 
             sn.current.should.deep.equal(new Buffer([0, 0, 0, 0, 0, 0]));
         });
     });
 
-    describe("#next()", function () {
-        it("should increase counter correctly", function () {
+    describe("#next()", function() {
+        it("should increase counter correctly", function() {
             var sn = new SequenceNumber();
             sn.current.should.deep.equal(new Buffer([0, 0, 0, 0, 0, 0]));
 
@@ -25,7 +25,7 @@ describe("SequenceNumber", function () {
             sn.current.should.deep.equal(next);
         });
 
-        it("should overflow correctly", function () {
+        it("should overflow correctly", function() {
             var sn = new SequenceNumber();
             sn.current = new Buffer([0, 0, 0, 0, 0, 0xff]);
 
@@ -35,7 +35,7 @@ describe("SequenceNumber", function () {
             sn.current.should.deep.equal(next);
         });
 
-        it("should cascade the overflow", function () {
+        it("should cascade the overflow", function() {
             var sn = new SequenceNumber();
             sn.current = new Buffer([0, 0xff, 0xff, 0xff, 0xff, 0xff]);
 
@@ -45,7 +45,7 @@ describe("SequenceNumber", function () {
             sn.current.should.deep.equal(next);
         });
 
-        it("should overflow back to zero", function () {
+        it("should overflow back to zero", function() {
             var sn = new SequenceNumber();
             sn.current = new Buffer([0xff, 0xff, 0xff, 0xff, 0xff, 0xff]);
 
@@ -56,8 +56,8 @@ describe("SequenceNumber", function () {
         });
     });
 
-    describe("#setNext()", function () {
-        it("should set the next value correctly", function () {
+    describe("#setNext()", function() {
+        it("should set the next value correctly", function() {
             var sn = new SequenceNumber();
             sn.current.should.deep.equal(new Buffer([0, 0, 0, 0, 0, 0]));
 
@@ -68,7 +68,7 @@ describe("SequenceNumber", function () {
             next.should.deep.equal(new Buffer([1, 2, 3, 4, 5, 6]));
         });
 
-        it("should overflow backwards if needed", function () {
+        it("should overflow backwards if needed", function() {
             var sn = new SequenceNumber();
             sn.current.should.deep.equal(new Buffer([0, 0, 0, 0, 0, 0]));
 
@@ -81,7 +81,7 @@ describe("SequenceNumber", function () {
             next.should.deep.equal(new Buffer([1, 0, 0, 0, 0, 0]));
         });
 
-        it("should overflow fully if needed", function () {
+        it("should overflow fully if needed", function() {
             var sn = new SequenceNumber();
             sn.current.should.deep.equal(new Buffer([0, 0, 0, 0, 0, 0]));
 

@@ -20,23 +20,23 @@ var datatypes = {
     FloatLE: 4,
     DoubleLE: 8,
     FloatBE: 4,
-    DoubleBE: 8,
+    DoubleBE: 8
 };
 
-describe("BufferReader", function () {
-    Object.keys(datatypes).forEach(function (dt) {
+describe("BufferReader", function() {
+    Object.keys(datatypes).forEach(function(dt) {
         var method = "read" + dt;
         var size = datatypes[dt];
 
-        describe("#" + method + "()", function () {
-            it("should advance offset", function () {
+        describe("#" + method + "()", function() {
+            it("should advance offset", function() {
                 var reader = new BufferReader(new Buffer(size));
                 reader[method]();
 
                 reader.offset.should.equal(size);
             });
 
-            it("should read bytes correctly", function () {
+            it("should read bytes correctly", function() {
                 var count = 16;
 
                 var buffer = crypto.pseudoRandomBytes(size * count);
@@ -50,7 +50,7 @@ describe("BufferReader", function () {
                 }
             });
 
-            it("should consider optional offset", function () {
+            it("should consider optional offset", function() {
                 var count = 16;
 
                 var buffer = crypto.pseudoRandomBytes(size * count);
@@ -68,8 +68,8 @@ describe("BufferReader", function () {
         });
     });
 
-    describe("#readUInt24BE()", function () {
-        it("should write bytes correctly", function () {
+    describe("#readUInt24BE()", function() {
+        it("should write bytes correctly", function() {
             var builder = new BufferBuilder();
             var value = Math.floor(Math.random() * 0xffffff);
             builder.writeUInt24BE(value);
@@ -81,8 +81,8 @@ describe("BufferReader", function () {
         });
     });
 
-    describe("#readUInt24LE()", function () {
-        it("should write bytes correctly", function () {
+    describe("#readUInt24LE()", function() {
+        it("should write bytes correctly", function() {
             var builder = new BufferBuilder();
             var value = Math.floor(Math.random() * 0xffffff);
             builder.writeUInt24LE(value);
@@ -94,8 +94,8 @@ describe("BufferReader", function () {
         });
     });
 
-    describe("#readBytes()", function () {
-        it("should read bytes correctly", function () {
+    describe("#readBytes()", function() {
+        it("should read bytes correctly", function() {
             var value = crypto.pseudoRandomBytes(64);
 
             var reader = new BufferReader(value);
@@ -109,8 +109,8 @@ describe("BufferReader", function () {
         });
     });
 
-    describe("#seek()", function () {
-        it("should change position in buffer", function () {
+    describe("#seek()", function() {
+        it("should change position in buffer", function() {
             var buffer = new Buffer([0x10, 0x20, 0x30, 0x40]);
             var reader = new BufferReader(buffer);
 
@@ -125,13 +125,13 @@ describe("BufferReader", function () {
     });
 });
 
-describe("BufferBuilder", function () {
-    Object.keys(datatypes).forEach(function (dt) {
+describe("BufferBuilder", function() {
+    Object.keys(datatypes).forEach(function(dt) {
         var method = "write" + dt;
         var size = datatypes[dt];
 
-        describe("#" + method + "()", function () {
-            it("should write bytes correctly", function () {
+        describe("#" + method + "()", function() {
+            it("should write bytes correctly", function() {
                 var count = 16;
 
                 var builder = new BufferBuilder();
@@ -150,8 +150,8 @@ describe("BufferBuilder", function () {
         });
     });
 
-    describe("#writeUInt24BE()", function () {
-        it("should write bytes correctly", function () {
+    describe("#writeUInt24BE()", function() {
+        it("should write bytes correctly", function() {
             var count = 16;
             var size = 3;
 
@@ -171,8 +171,8 @@ describe("BufferBuilder", function () {
         });
     });
 
-    describe("#writeUInt24LE()", function () {
-        it("should write bytes correctly", function () {
+    describe("#writeUInt24LE()", function() {
+        it("should write bytes correctly", function() {
             var count = 16;
             var size = 3;
 
@@ -192,8 +192,8 @@ describe("BufferBuilder", function () {
         });
     });
 
-    describe("#writeBytes()", function () {
-        it("should write bytes correctly", function () {
+    describe("#writeBytes()", function() {
+        it("should write bytes correctly", function() {
             var count = 16;
             var size = 8;
 

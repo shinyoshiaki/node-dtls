@@ -8,7 +8,7 @@ var DtlsRandom = require("./DtlsRandom");
 var DtlsExtension = require("./DtlsExtension");
 var dtls = require("../dtls");
 
-var DtlsServerHello = function (data) {
+var DtlsServerHello = function(data) {
     Packet.call(this, data);
 };
 util.inherits(DtlsServerHello, Packet);
@@ -24,8 +24,8 @@ DtlsServerHello.prototype.spec = new PacketSpec([
         name: "extensions",
         type: "var16",
         itemType: DtlsExtension,
-        optional: true,
-    },
+        optional: true
+    }
 ]);
 
 module.exports = DtlsServerHello;

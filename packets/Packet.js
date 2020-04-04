@@ -2,7 +2,7 @@
 
 var BufferReader = require("../BufferReader");
 
-var Packet = function (data) {
+var Packet = function(data) {
     if (data instanceof Buffer || data instanceof BufferReader)
         return this.read(data);
 
@@ -11,11 +11,11 @@ var Packet = function (data) {
     }
 };
 
-Packet.prototype.read = function (data) {
+Packet.prototype.read = function(data) {
     return this.spec.read(data, this);
 };
 
-Packet.prototype.getBuffer = function () {
+Packet.prototype.getBuffer = function() {
     return this.spec.write(this);
 };
 

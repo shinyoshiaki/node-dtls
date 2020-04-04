@@ -13,9 +13,9 @@ var DtlsHandshake = require("../packets/DtlsHandshake");
 var DtlsHelloVerifyRequest = require("../packets/DtlsHelloVerifyRequest");
 var DtlsProtocolVersion = require("../packets/DtlsProtocolVersion");
 
-describe("HandshakeBuilder", function () {
-    describe("#add()", function () {
-        it("should handle unfragmented packets", function () {
+describe("HandshakeBuilder", function() {
+    describe("#add()", function() {
+        it("should handle unfragmented packets", function() {
             var handshake = createVerifyRequest();
 
             var builder = new HandshakeBuilder();
@@ -26,7 +26,7 @@ describe("HandshakeBuilder", function () {
             builder.merged[0].body.should.deep.equal(handshake.body);
         });
 
-        it("should merge fragmented packets", function () {
+        it("should merge fragmented packets", function() {
             var original = createVerifyRequest();
 
             var fragment1 = new DtlsHandshake({
@@ -34,7 +34,7 @@ describe("HandshakeBuilder", function () {
                 length: original.body.length,
                 messageSeq: 0,
                 fragmentOffset: 0,
-                body: original.body.slice(0, 10),
+                body: original.body.slice(0, 10)
             });
 
             var fragment2 = new DtlsHandshake({
@@ -42,7 +42,7 @@ describe("HandshakeBuilder", function () {
                 length: original.body.length,
                 messageSeq: 0,
                 fragmentOffset: 10,
-                body: original.body.slice(10),
+                body: original.body.slice(10)
             });
 
             var builder = new HandshakeBuilder();
@@ -67,7 +67,7 @@ describe("HandshakeBuilder", function () {
             builder.buffers.should.not.include.keys("0");
         });
 
-        it("should handle out of order fragments", function () {
+        it("should handle out of order fragments", function() {
             var original = createVerifyRequest();
 
             var fragment1 = new DtlsHandshake({
@@ -75,7 +75,7 @@ describe("HandshakeBuilder", function () {
                 length: original.body.length,
                 messageSeq: 0,
                 fragmentOffset: 0,
-                body: original.body.slice(0, 10),
+                body: original.body.slice(0, 10)
             });
 
             var fragment2 = new DtlsHandshake({
@@ -83,7 +83,7 @@ describe("HandshakeBuilder", function () {
                 length: original.body.length,
                 messageSeq: 0,
                 fragmentOffset: 10,
-                body: original.body.slice(10, 20),
+                body: original.body.slice(10, 20)
             });
 
             var fragment3 = new DtlsHandshake({
@@ -91,7 +91,7 @@ describe("HandshakeBuilder", function () {
                 length: original.body.length,
                 messageSeq: 0,
                 fragmentOffset: 20,
-                body: original.body.slice(20),
+                body: original.body.slice(20)
             });
 
             var builder = new HandshakeBuilder();
@@ -122,7 +122,7 @@ describe("HandshakeBuilder", function () {
             builder.merged[0].body.should.deep.equal(original.body);
         });
 
-        it("should handle late packets", function () {
+        it("should handle late packets", function() {
             var first = createVerifyRequest();
             var second = createVerifyRequest();
 
@@ -132,7 +132,7 @@ describe("HandshakeBuilder", function () {
             builder.add(second).should.equal.false;
         });
 
-        it("should handle late fragments", function () {
+        it("should handle late fragments", function() {
             var first = createVerifyRequest();
             var second = createVerifyRequest();
 
@@ -152,7 +152,7 @@ describe("HandshakeBuilder", function () {
             builder.buffers[0].body.slice(0, 20).should.deep.equal(first.body);
         });
 
-        it("should handle duplicate early paclets", function () {
+        it("should handle duplicate early paclets", function() {
             var original = createVerifyRequest();
 
             var fragment1 = new DtlsHandshake({
@@ -160,7 +160,7 @@ describe("HandshakeBuilder", function () {
                 length: original.body.length,
                 messageSeq: 0,
                 fragmentOffset: 0,
-                body: original.body.slice(0, 10),
+                body: original.body.slice(0, 10)
             });
 
             var fragment2 = new DtlsHandshake({
@@ -168,7 +168,7 @@ describe("HandshakeBuilder", function () {
                 length: original.body.length,
                 messageSeq: 0,
                 fragmentOffset: 10,
-                body: original.body.slice(10, 20),
+                body: original.body.slice(10, 20)
             });
 
             var builder = new HandshakeBuilder();
@@ -193,8 +193,8 @@ describe("HandshakeBuilder", function () {
         });
     });
 
-    describe("#next()", function () {
-        it("should return false by default", function () {
+    describe("#next()", function() {
+        it("should return false by default", function() {
             var builder = new HandshakeBuilder();
 
             builder.messageSeqToRead.should.equal(0);
@@ -202,7 +202,7 @@ describe("HandshakeBuilder", function () {
             builder.messageSeqToRead.should.equal(0);
         });
 
-        it("should return packet when a merged packet exists", function () {
+        it("should return packet when a merged packet exists", function() {
             var original = createVerifyRequest();
 
             var builder = new HandshakeBuilder();
@@ -214,7 +214,7 @@ describe("HandshakeBuilder", function () {
             builder.messageSeqToRead.should.equal(1);
         });
 
-        it("should return false when we have incomplete handshake", function () {
+        it("should return false when we have incomplete handshake", function() {
             var original = createVerifyRequest();
 
             var fragment1 = new DtlsHandshake({
@@ -222,7 +222,7 @@ describe("HandshakeBuilder", function () {
                 length: original.body.length,
                 messageSeq: 0,
                 fragmentOffset: 0,
-                body: original.body.slice(0, 10),
+                body: original.body.slice(0, 10)
             });
 
             var fragment2 = new DtlsHandshake({
@@ -230,7 +230,7 @@ describe("HandshakeBuilder", function () {
                 length: original.body.length,
                 messageSeq: 0,
                 fragmentOffset: 10,
-                body: original.body.slice(10),
+                body: original.body.slice(10)
             });
 
             var builder = new HandshakeBuilder();
@@ -247,11 +247,11 @@ describe("HandshakeBuilder", function () {
         });
     });
 
-    describe("#createHandshakes()", function () {
-        it("should wrap single handshake", function () {
+    describe("#createHandshakes()", function() {
+        it("should wrap single handshake", function() {
             var verifyRequest = new packets.HelloVerifyRequest({
                 serverVersion: new DtlsProtocolVersion({ major: 1, minor: 2 }),
-                cookie: crypto.pseudoRandomBytes(30),
+                cookie: crypto.pseudoRandomBytes(30)
             });
 
             var builder = new HandshakeBuilder();
@@ -265,11 +265,11 @@ describe("HandshakeBuilder", function () {
             hs.body.should.deep.equal(verifyRequest.getBuffer());
         });
 
-        it("should wrap multiple handshakes", function () {
+        it("should wrap multiple handshakes", function() {
             var helloDone = new packets.ServerHelloDone({});
             var verifyRequest = new packets.HelloVerifyRequest({
                 serverVersion: new DtlsProtocolVersion({ major: 1, minor: 2 }),
-                cookie: crypto.pseudoRandomBytes(30),
+                cookie: crypto.pseudoRandomBytes(30)
             });
 
             var builder = new HandshakeBuilder();
@@ -286,11 +286,11 @@ describe("HandshakeBuilder", function () {
         });
     });
 
-    describe("#fragmentHandshakes()", function () {
-        it("should fragment single handshake", function () {
+    describe("#fragmentHandshakes()", function() {
+        it("should fragment single handshake", function() {
             var cert = crypto.pseudoRandomBytes(1024);
             var certificate = new packets.Certificate({
-                certificateList: [cert, cert, cert],
+                certificateList: [cert, cert, cert]
             });
 
             var builder = new HandshakeBuilder();
@@ -327,14 +327,14 @@ describe("HandshakeBuilder", function () {
             fragments[3].fragmentOffset.should.equal(3000);
         });
 
-        it("should fragment multiple handshakes", function () {
+        it("should fragment multiple handshakes", function() {
             var cert1 = crypto.pseudoRandomBytes(1500);
             var certificate1 = new packets.Certificate({
-                certificateList: [cert1],
+                certificateList: [cert1]
             });
             var cert2 = crypto.pseudoRandomBytes(1500);
             var certificate2 = new packets.Certificate({
-                certificateList: [cert2],
+                certificateList: [cert2]
             });
 
             var builder = new HandshakeBuilder();
@@ -378,10 +378,10 @@ describe("HandshakeBuilder", function () {
             fragments[3].fragmentOffset.should.equal(1000);
         });
 
-        it("should handle buffers", function () {
+        it("should handle buffers", function() {
             var cert = crypto.pseudoRandomBytes(1024);
             var certificate = new packets.Certificate({
-                certificateList: [cert],
+                certificateList: [cert]
             });
 
             var builder = new HandshakeBuilder();
@@ -412,10 +412,10 @@ describe("HandshakeBuilder", function () {
     });
 });
 
-var createVerifyRequest = function () {
+var createVerifyRequest = function() {
     var verifyRequest = new DtlsHelloVerifyRequest({
         serverVersion: new DtlsProtocolVersion({ major: 1, minor: 2 }),
-        cookie: crypto.pseudoRandomBytes(30),
+        cookie: crypto.pseudoRandomBytes(30)
     });
 
     var buffer = verifyRequest.getBuffer();
@@ -425,7 +425,7 @@ var createVerifyRequest = function () {
         length: buffer.length,
         messageSeq: 0,
         fragmentOffset: 0,
-        body: buffer,
+        body: buffer
     });
 
     return handshake;

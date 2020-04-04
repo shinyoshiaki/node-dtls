@@ -3,7 +3,7 @@
 var BufferReader = require("../BufferReader");
 var BufferBuilder = require("../BufferBuilder");
 
-var PacketSpec = function (spec) {
+var PacketSpec = function(spec) {
     // Normalise input parameter
     this.spec = [];
     for (var s in spec) {
@@ -13,14 +13,14 @@ var PacketSpec = function (spec) {
     }
 };
 
-PacketSpec.normalize = function (item) {
+PacketSpec.normalize = function(item) {
     // Normalize { name: type } -> { name: name, type: type }
     if (typeof item === "object") {
         var keys = Object.keys(item);
         if (keys.length === 1) {
             item = {
                 name: keys[0],
-                type: item[keys[0]],
+                type: item[keys[0]]
             };
         }
     } else if (
@@ -50,7 +50,7 @@ PacketSpec.normalize = function (item) {
     return item;
 };
 
-PacketSpec.prototype.read = function (reader, obj) {
+PacketSpec.prototype.read = function(reader, obj) {
     if (reader instanceof Buffer) reader = new BufferReader(reader);
 
     for (var s in this.spec) {
@@ -63,7 +63,7 @@ PacketSpec.prototype.read = function (reader, obj) {
     return reader.remaining();
 };
 
-PacketSpec.prototype.write = function (obj) {
+PacketSpec.prototype.write = function(obj) {
     var builder = new BufferBuilder();
 
     for (var s in this.spec) {
@@ -76,7 +76,7 @@ PacketSpec.prototype.write = function (obj) {
     return builder.getBuffer();
 };
 
-PacketSpec.readItem = function (reader, item, obj) {
+PacketSpec.readItem = function(reader, item, obj) {
     if (reader.buffer.length - reader.offset === 0 && item.optional) return;
 
     // Resolve the function used to read the value.
@@ -103,7 +103,7 @@ PacketSpec.readItem = function (reader, item, obj) {
     }
 };
 
-PacketSpec.writeItem = function (builder, item, field, obj) {
+PacketSpec.writeItem = function(builder, item, field, obj) {
     // Resolve the function used to write the value.
     var writerFunc = null;
     if (item.write) {
@@ -138,35 +138,35 @@ var types = {
     double: "DoubleBE",
     var8: {
         read: constructVariableLengthRead(8),
-        write: constructVariableLengthWrite(8),
+        write: constructVariableLengthWrite(8)
     },
     var16: {
         read: constructVariableLengthRead(16),
-        write: constructVariableLengthWrite(16),
+        write: constructVariableLengthWrite(16)
     },
     var24: {
         read: constructVariableLengthRead(24),
-        write: constructVariableLengthWrite(24),
+        write: constructVariableLengthWrite(24)
     },
     var32: {
         read: constructVariableLengthRead(32),
-        write: constructVariableLengthWrite(32),
+        write: constructVariableLengthWrite(32)
     },
     bytes: {
-        read: function (reader, type) {
+        read: function(reader, type) {
             return reader.readBytes(type.size);
         },
-        write: function (builder, value, type) {
+        write: function(builder, value, type) {
             builder.writeBytes(value.slice(0, type.size));
-        },
-    },
+        }
+    }
 };
 
 function constructVariableLengthRead(length) {
     // If this is multi-byte read, specify Big endian format.
     if (length > 8) length = length + "BE";
 
-    return function (reader, type) {
+    return function(reader, type) {
         var dataLength = reader["readUInt" + length]();
 
         if (!type.itemType) {
@@ -186,7 +186,7 @@ function constructVariableLengthWrite(length) {
     // If this is multi-byte read, specify Big endian format.
     if (length > 8) length = length + "BE";
 
-    return function (builder, value, type) {
+    return function(builder, value, type) {
         if (!type.itemType) {
             builder["writeUInt" + length](value.length);
             builder.writeBytes(value);

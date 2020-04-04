@@ -8,7 +8,7 @@ var DtlsRandom = require("./DtlsRandom");
 var DtlsExtension = require("./DtlsExtension");
 var dtls = require("../dtls");
 
-var DtlsHelloVerifyRequest = function (data) {
+var DtlsHelloVerifyRequest = function(data) {
     Packet.call(this, data);
 };
 util.inherits(DtlsHelloVerifyRequest, Packet);
@@ -18,7 +18,7 @@ DtlsHelloVerifyRequest.prototype.messageType =
 
 DtlsHelloVerifyRequest.prototype.spec = new PacketSpec([
     { serverVersion: DtlsProtocolVersion },
-    { cookie: "var8" },
+    { cookie: "var8" }
 ]);
 
 module.exports = DtlsHelloVerifyRequest;

@@ -14,32 +14,32 @@ var CipherInfo = require("../CipherInfo");
 var KeyContext = require("../KeyContext");
 var prf = require("../prf");
 
-describe("ClientHandshakeHandler", function () {
+describe("ClientHandshakeHandler", function() {
     var versions = {
         "1.2": {
             major: ~1,
-            minor: ~2,
+            minor: ~2
         },
         "1.0": {
             major: ~1,
-            minor: ~0,
-        },
+            minor: ~0
+        }
     };
 
     for (var v in versions)
-        describe("DTLS v" + v, function () {
+        describe("DTLS v" + v, function() {
             var ver = versions[v];
             var version = new packets.ProtocolVersion(ver.major, ver.minor);
 
-            describe("send_clientHello", function () {
-                it("should send ClientHello", function (done) {
+            describe("send_clientHello", function() {
+                it("should send ClientHello", function(done) {
                     var parameters = new SecurityParameterContainer();
                     var handshakeHandler = new ClientHandshakeHandler(
                         parameters
                     );
                     handshakeHandler.version = version;
 
-                    handshakeHandler.onSend = function (msgs) {
+                    handshakeHandler.onSend = function(msgs) {
                         msgs.should.have.length(1);
 
                         var msg = msgs[0];
@@ -66,7 +66,7 @@ describe("ClientHandshakeHandler", function () {
                         clientHello.cookie.should.have.length(0);
 
                         clientHello.cipherSuites.should.deep.equal([
-                            CipherInfo.TLS_RSA_WITH_AES_128_CBC_SHA.id,
+                            CipherInfo.TLS_RSA_WITH_AES_128_CBC_SHA.id
                         ]);
                         clientHello.compressionMethods.should.deep.equal([0]);
 
@@ -80,12 +80,12 @@ describe("ClientHandshakeHandler", function () {
                     handshakeHandler.setResponse(null);
                 });
 
-                it("should create new SecurityParameter", function () {
+                it("should create new SecurityParameter", function() {
                     var parameters = new SecurityParameterContainer();
                     var handshakeHandler = new ClientHandshakeHandler(
                         parameters
                     );
-                    handshakeHandler.onSend = function () {};
+                    handshakeHandler.onSend = function() {};
 
                     should.not.exist(parameters.pending);
 
@@ -99,8 +99,8 @@ describe("ClientHandshakeHandler", function () {
                 });
             });
 
-            describe("#handle_helloVerifyRequest()", function () {
-                it("should cause ClientHello", function () {
+            describe("#handle_helloVerifyRequest()", function() {
+                it("should cause ClientHello", function() {
                     var parameters = new SecurityParameterContainer();
                     var handshakeHandler = new ClientHandshakeHandler(
                         parameters
@@ -112,10 +112,10 @@ describe("ClientHandshakeHandler", function () {
                         body: new packets.HelloVerifyRequest({
                             serverVersion: new packets.ProtocolVersion({
                                 major: ver.major,
-                                minor: ver.minor,
+                                minor: ver.minor
                             }),
-                            cookie: cookie,
-                        }).getBuffer(),
+                            cookie: cookie
+                        }).getBuffer()
                     });
 
                     action.should.equal(handshakeHandler.send_clientHello);
@@ -125,8 +125,8 @@ describe("ClientHandshakeHandler", function () {
                 });
             });
 
-            describe("#handle_serverHello()", function () {
-                it("should set the parameters", function () {
+            describe("#handle_serverHello()", function() {
+                it("should set the parameters", function() {
                     var parameters = new SecurityParameterContainer();
                     var handshakeHandler = new ClientHandshakeHandler(
                         parameters
@@ -141,7 +141,7 @@ describe("ClientHandshakeHandler", function () {
                     ));
 
                     var setFrom = false;
-                    param.setFrom = function (suite) {
+                    param.setFrom = function(suite) {
                         setFrom = true;
                         suite.should.equal(cipherSuite);
                     };
@@ -153,8 +153,8 @@ describe("ClientHandshakeHandler", function () {
                             sessionId: sessionId,
                             cipherSuite: cipherSuite.id,
                             compressionMethod: 0,
-                            extensions: [],
-                        }).getBuffer(),
+                            extensions: []
+                        }).getBuffer()
                     });
 
                     // ServerHello alone doesn't result in action. Client should
@@ -170,8 +170,8 @@ describe("ClientHandshakeHandler", function () {
                 });
             });
 
-            describe("#handle_certificate()", function () {
-                it("should store certificate", function () {
+            describe("#handle_certificate()", function() {
+                it("should store certificate", function() {
                     var parameters = new SecurityParameterContainer();
                     var handshakeHandler = new ClientHandshakeHandler(
                         parameters
@@ -185,8 +185,8 @@ describe("ClientHandshakeHandler", function () {
 
                     var action = handshakeHandler.handle_certificate({
                         body: new packets.Certificate({
-                            certificateList: certificateList,
-                        }).getBuffer(),
+                            certificateList: certificateList
+                        }).getBuffer()
                     });
 
                     // Certificate alone doesn't result in action. Client should wait
@@ -198,8 +198,8 @@ describe("ClientHandshakeHandler", function () {
                 });
             });
 
-            describe("#handle_serverHelloDone()", function () {
-                it("should send pre-master key", function () {
+            describe("#handle_serverHelloDone()", function() {
+                it("should send pre-master key", function() {
                     var clientRandom = crypto.pseudoRandomBytes(16);
                     var serverRandom = crypto.pseudoRandomBytes(16);
 
@@ -216,7 +216,7 @@ describe("ClientHandshakeHandler", function () {
                     param.serverRandom = serverRandom;
 
                     var action = handshakeHandler.handle_serverHelloDone({
-                        body: new packets.ServerHelloDone().getBuffer(),
+                        body: new packets.ServerHelloDone().getBuffer()
                     });
 
                     should.exist(param.masterKey);
@@ -226,8 +226,8 @@ describe("ClientHandshakeHandler", function () {
                 });
             });
 
-            describe("#send_keyExchange()", function () {
-                it("should send key", function (done) {
+            describe("#send_keyExchange()", function() {
+                it("should send key", function(done) {
                     var parameters = new SecurityParameterContainer();
                     var handshakeHandler = new ClientHandshakeHandler(
                         parameters
@@ -247,13 +247,13 @@ describe("ClientHandshakeHandler", function () {
                     var pem = fs.readFileSync("test/assets/certificate.pem");
                     var keyContext = new KeyContext({
                         key: pem,
-                        cert: pem,
+                        cert: pem
                     });
 
                     param.preMasterKey = preMasterKey;
                     handshakeHandler.certificate = keyContext.certificate;
 
-                    handshakeHandler.onSend = function (msgs) {
+                    handshakeHandler.onSend = function(msgs) {
                         msgs.should.have.length(3);
 
                         msgs[0].type.should.equal(dtls.MessageType.handshake);
@@ -275,7 +275,7 @@ describe("ClientHandshakeHandler", function () {
                         var actualPreMaster = crypto.privateDecrypt(
                             {
                                 key: keyContext.key,
-                                padding: constants.RSA_PKCS1_PADDING,
+                                padding: constants.RSA_PKCS1_PADDING
                             },
                             keyExchange.exchangeKeys
                         );
@@ -305,8 +305,8 @@ describe("ClientHandshakeHandler", function () {
                 });
             });
 
-            describe("#handle_finished", function () {
-                it("should finish handshake", function (done) {
+            describe("#handle_finished", function() {
+                it("should finish handshake", function(done) {
                     var parameters = new SecurityParameterContainer();
                     var handshakeHandler = new ClientHandshakeHandler(
                         parameters
@@ -324,14 +324,14 @@ describe("ClientHandshakeHandler", function () {
                         32
                     );
 
-                    handshakeHandler.onHandshake = function () {
+                    handshakeHandler.onHandshake = function() {
                         done();
                     };
 
                     var action = handshakeHandler.handle_finished({
                         body: new packets.Finished({
-                            verifyData: verifyData,
-                        }).getBuffer(),
+                            verifyData: verifyData
+                        }).getBuffer()
                     });
                 });
             });

@@ -5,7 +5,7 @@ var Packet = require("./Packet");
 var PacketSpec = require("./PacketSpec");
 var dtls = require("../dtls");
 
-var DtlsServerHelloDone = function (data) {
+var DtlsServerHelloDone = function(data) {
     Packet.call(this, data);
 };
 util.inherits(DtlsServerHelloDone, Packet);

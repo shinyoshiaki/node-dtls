@@ -5,7 +5,7 @@ var Packet = require("./Packet");
 var PacketSpec = require("./PacketSpec");
 var dtls = require("../dtls");
 
-var DtlsChangeCipherSpec = function (data) {
+var DtlsChangeCipherSpec = function(data) {
     Packet.call(this, data);
 };
 util.inherits(DtlsChangeCipherSpec, Packet);

@@ -5,7 +5,7 @@ var Packet = require("./Packet");
 var PacketSpec = require("./PacketSpec");
 var dtls = require("../dtls");
 
-var DtlsHandshake = function (data) {
+var DtlsHandshake = function(data) {
     Packet.call(this, data);
 };
 util.inherits(DtlsHandshake, Packet);
@@ -17,7 +17,7 @@ DtlsHandshake.prototype.spec = new PacketSpec([
     { length: "uint24" },
     { messageSeq: "uint16" },
     { fragmentOffset: "uint24" },
-    { body: "var24" },
+    { body: "var24" }
 ]);
 
 module.exports = DtlsHandshake;

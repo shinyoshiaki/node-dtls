@@ -17,29 +17,29 @@ var pem = fs.readFileSync("server.pem");
 var server = dtls.createServer({
     type: "udp4",
     key: pem,
-    cert: pem,
+    cert: pem
 });
 server.bind(23395);
 
 var serverSocket, clientSocket;
-server.on("secureConnection", function (socket) {
+server.on("secureConnection", function(socket) {
     console.log("Server received client#Finished and is ready.");
 
     serverSocket = socket;
 
-    serverSocket.on("message", function (msg) {
+    serverSocket.on("message", function(msg) {
         if (stop) return;
         serverSocket.send(msg);
     });
 });
 
-clientSocket = dtls.connect(23395, "localhost", "udp4", function () {
+clientSocket = dtls.connect(23395, "localhost", "udp4", function() {
     console.log("Client received server#Finished and is ready.");
 
     startTest();
 });
 
-clientSocket.on("message", function (msg) {
+clientSocket.on("message", function(msg) {
     if (stop) return;
 
     count++;
@@ -54,7 +54,7 @@ clientSocket.on("message", function (msg) {
     clientSocket.send(msg);
 });
 
-var startTest = function () {
+var startTest = function() {
     count = 0;
     stop = false;
 
@@ -68,7 +68,7 @@ var startTest = function () {
     clientSocket.send(buffer);
     clientSocket.send(buffer);
 
-    setTimeout(function () {
+    setTimeout(function() {
         stop = true;
         console.log("Packets:    " + count);
         console.log("Size:       " + buffer.length + " B");

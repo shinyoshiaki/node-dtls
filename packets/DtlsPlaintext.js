@@ -7,7 +7,7 @@ var PacketSpec = require("./PacketSpec");
 var DtlsProtocolVersion = require("./DtlsProtocolVersion");
 var dtls = require("../dtls");
 
-var DtlsPlaintext = function (data) {
+var DtlsPlaintext = function(data) {
     for (var d in data) {
         this[d] = data[d];
     }
@@ -19,18 +19,18 @@ DtlsPlaintext.prototype.spec = new PacketSpec([
     { version: DtlsProtocolVersion },
     { epoch: "uint16" },
     { name: "sequenceNumber", type: "bytes", size: 48 / 8 },
-    { name: "fragment", type: "var16" },
+    { name: "fragment", type: "var16" }
 ]);
 
 var contentTypes = {};
-DtlsPlaintext.prototype.getFragmentType = function () {
+DtlsPlaintext.prototype.getFragmentType = function() {
     var ct = contentTypes[this.type];
     if (!ct) return log.error("Unknown content type:", this.type);
 
     return ct;
 };
 
-DtlsPlaintext.readPackets = function (data) {
+DtlsPlaintext.readPackets = function(data) {
     var start = 0;
     var plaintexts = [];
     while (data.length > start) {
@@ -41,7 +41,7 @@ DtlsPlaintext.readPackets = function (data) {
         var type = data.readUInt8(start, true);
         var version = new DtlsProtocolVersion({
             major: data.readInt8(start + 1, true),
-            minor: data.readInt8(start + 2, true),
+            minor: data.readInt8(start + 2, true)
         });
         var epoch = data.readUInt16BE(start + 3, true);
         var sequenceNumber = data.slice(start + 5, start + 11);
@@ -52,7 +52,7 @@ DtlsPlaintext.readPackets = function (data) {
             version: version,
             epoch: epoch,
             sequenceNumber: sequenceNumber,
-            fragment: fragment,
+            fragment: fragment
         });
 
         plaintexts.push(dtpt);
@@ -63,7 +63,7 @@ DtlsPlaintext.readPackets = function (data) {
     return plaintexts;
 };
 
-DtlsPlaintext.prototype.getBuffer = function () {
+DtlsPlaintext.prototype.getBuffer = function() {
     var buffer = new Buffer(13 + this.fragment.length);
     buffer.writeUInt8(this.type, 0, true);
     buffer.writeUInt8(this.version.major, 1, true);

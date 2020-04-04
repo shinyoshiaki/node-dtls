@@ -4,8 +4,8 @@ var should = require("chai").should();
 
 var DtlsHandshake = require("../packets/DtlsHandshake");
 
-describe("DtlsHandshake", function () {
-    it("should be readable", function () {
+describe("DtlsHandshake", function() {
+    it("should be readable", function() {
         var buffer = new Buffer([
             0x01,
             0x02,
@@ -23,7 +23,7 @@ describe("DtlsHandshake", function () {
             0x11,
             0x12,
             0x13,
-            0x14,
+            0x14
         ]);
 
         var dtlsHandshake = new DtlsHandshake(buffer);

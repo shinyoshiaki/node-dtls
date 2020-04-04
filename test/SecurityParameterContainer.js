@@ -6,9 +6,9 @@ var packets = require("../packets");
 
 var SecurityParameterContainer = require("../SecurityParameterContainer");
 
-describe("SecurityParameterContainer", function () {
-    describe("#ctor()", function () {
-        it("should init correctly", function () {
+describe("SecurityParameterContainer", function() {
+    describe("#ctor()", function() {
+        it("should init correctly", function() {
             var spc = new SecurityParameterContainer();
 
             should.not.exist(spc.pending);
@@ -18,8 +18,8 @@ describe("SecurityParameterContainer", function () {
         });
     });
 
-    describe("#initNew()", function () {
-        it("should create new pending parameter", function () {
+    describe("#initNew()", function() {
+        it("should create new pending parameter", function() {
             var spc = new SecurityParameterContainer();
 
             should.not.exist(spc.pending);
@@ -36,8 +36,8 @@ describe("SecurityParameterContainer", function () {
         });
     });
 
-    describe("#getcurrent()", function () {
-        it("should get the parameters for first epoch", function () {
+    describe("#getcurrent()", function() {
+        it("should get the parameters for first epoch", function() {
             var spc = new SecurityParameterContainer();
 
             var current = spc.getCurrent(0);
@@ -45,7 +45,7 @@ describe("SecurityParameterContainer", function () {
             current.should.equal(spc.first);
         });
 
-        it("should get the parameters for random epoch", function () {
+        it("should get the parameters for random epoch", function() {
             var spc = new SecurityParameterContainer();
 
             var obj = { params: 1 };
@@ -57,8 +57,8 @@ describe("SecurityParameterContainer", function () {
         });
     });
 
-    describe("#get()", function () {
-        it("should get the parameters for first packet", function () {
+    describe("#get()", function() {
+        it("should get the parameters for first packet", function() {
             var spc = new SecurityParameterContainer();
 
             var current = spc.get({ epoch: 0 });
@@ -66,7 +66,7 @@ describe("SecurityParameterContainer", function () {
             current.should.equal(spc.first);
         });
 
-        it("should get the parameters for random packet", function () {
+        it("should get the parameters for random packet", function() {
             var spc = new SecurityParameterContainer();
 
             var obj = { params: 1 };
@@ -78,8 +78,8 @@ describe("SecurityParameterContainer", function () {
         });
     });
 
-    describe("#changeCipher()", function () {
-        it("should change the current parameters", function () {
+    describe("#changeCipher()", function() {
+        it("should change the current parameters", function() {
             var spc = new SecurityParameterContainer();
             var version = new packets.ProtocolVersion(~1, ~2);
             var pending = spc.initNew(version);
@@ -97,11 +97,11 @@ describe("SecurityParameterContainer", function () {
             spc.parameters[spc.current].should.not.equal(spc.first);
         });
 
-        it("should refuse to skip epochs", function () {
+        it("should refuse to skip epochs", function() {
             var spc = new SecurityParameterContainer();
             spc.initNew(new packets.ProtocolVersion(~1, ~2));
 
-            (function () {
+            (function() {
                 spc.changeCipher(10);
             }.should.not.throw(Error));
 

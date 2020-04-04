@@ -4,8 +4,8 @@ var should = require("chai").should();
 
 var prf = require("../prf");
 
-describe("prf", function () {
-    it("should return correct TLS 1.2 output", function () {
+describe("prf", function() {
+    it("should return correct TLS 1.2 output", function() {
         // https://www.ietf.org/mail-archive/web/tls/current/msg03416.html
 
         var secret = new Buffer([
@@ -24,7 +24,7 @@ describe("prf", function () {
             0x9a,
             0x71,
             0xdb,
-            0x35,
+            0x35
         ]);
 
         var seed = new Buffer([
@@ -43,7 +43,7 @@ describe("prf", function () {
             0xff,
             0xd5,
             0x19,
-            0x8c,
+            0x8c
         ]);
 
         var label = new Buffer([
@@ -56,7 +56,7 @@ describe("prf", function () {
             0x61,
             0x62,
             0x65,
-            0x6c,
+            0x6c
         ]);
 
         //label.toString( 'ascii' ).should.equal( 'test label' );
@@ -163,13 +163,13 @@ describe("prf", function () {
             0x87,
             0x34,
             0x7b,
-            0x66,
+            0x66
         ]);
 
         output.should.deep.equal(expected);
     });
 
-    it("should return correct TLS 1.0 output", function () {
+    it("should return correct TLS 1.0 output", function() {
         // https://code.google.com/p/as3crypto/source/browse/trunk/as3crypto/src/com/hurlant/crypto/tests/TLSPRFTest.as?r=5
 
         var secret = new Buffer(48);
@@ -286,7 +286,7 @@ describe("prf", function () {
             0xa8,
             0xc9,
             0xa0,
-            0x13,
+            0x13
         ]);
 
         output.should.deep.equal(expected);

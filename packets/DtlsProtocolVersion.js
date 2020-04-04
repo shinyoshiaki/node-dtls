@@ -4,7 +4,7 @@ var util = require("util");
 var Packet = require("./Packet");
 var PacketSpec = require("./PacketSpec");
 
-var DtlsProtocolVersion = function (data, minor) {
+var DtlsProtocolVersion = function(data, minor) {
     if (minor !== undefined) {
         this.major = data;
         this.minor = minor;
@@ -16,7 +16,7 @@ util.inherits(DtlsProtocolVersion, Packet);
 
 DtlsProtocolVersion.prototype.spec = new PacketSpec([
     { major: "int8" },
-    { minor: "int8" },
+    { minor: "int8" }
 ]);
 
 module.exports = DtlsProtocolVersion;

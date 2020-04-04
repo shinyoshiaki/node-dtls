@@ -12,9 +12,9 @@ var prf = require("../prf");
 
 var SecurityParameters = require("../SecurityParameters");
 
-describe("SecurityParameters", function () {
-    describe("#ctor()", function () {
-        it("should initialize the object", function () {
+describe("SecurityParameters", function() {
+    describe("#ctor()", function() {
+        it("should initialize the object", function() {
             var version = new packets.ProtocolVersion(~1, ~2);
             var sp = new SecurityParameters(1, version);
 
@@ -45,11 +45,11 @@ describe("SecurityParameters", function () {
         });
     });
 
-    describe("DTLS 1.2", function () {
+    describe("DTLS 1.2", function() {
         var version = new packets.ProtocolVersion(~1, ~2);
 
-        describe("#setFrom()", function () {
-            it("should set parameters from cipher suite", function () {
+        describe("#setFrom()", function() {
+            it("should set parameters from cipher suite", function() {
                 var sp = new SecurityParameters(0, version);
 
                 var suite = CipherInfo.TLS_RSA_WITH_AES_128_CBC_SHA;
@@ -70,8 +70,8 @@ describe("SecurityParameters", function () {
             });
         });
 
-        describe("#calculateMasterKey()", function () {
-            it("should calcualte master key correctly", function () {
+        describe("#calculateMasterKey()", function() {
+            it("should calcualte master key correctly", function() {
                 var pre = new Buffer([0x33, 0x42, 0xea, 0xb5, 0x5e]);
                 var sr = new Buffer([0xbf, 0x98, 0xdc, 0x2f, 0x32]);
                 var cr = new Buffer([0x34, 0x14, 0x0b, 0x40, 0xaf]);
@@ -92,8 +92,8 @@ describe("SecurityParameters", function () {
             });
         });
 
-        describe("#init()", function () {
-            it("should calculate key material correctly", function () {
+        describe("#init()", function() {
+            it("should calculate key material correctly", function() {
                 var b = new Buffer([0x5f, 0x1f, 0xd2, 0x29, 0x6b]);
                 var sr = new Buffer([0x02, 0x86, 0xea, 0x29, 0x91]);
                 var cr = new Buffer([0x33, 0x55, 0x4d, 0x81, 0x54]);
@@ -110,7 +110,7 @@ describe("SecurityParameters", function () {
                     cwk: new Buffer("373f963f4a2fbc13ffa22b256c46d36a", "hex"),
                     swk: new Buffer("41585768b95aa0fa9a18be07be5f1d3c", "hex"),
                     cwi: new Buffer("c9babf9590a2ff90ad79c63f4d4ae2df", "hex"),
-                    swi: new Buffer("6ac49161350293e99e67fa7833e32f2b", "hex"),
+                    swi: new Buffer("6ac49161350293e99e67fa7833e32f2b", "hex")
                 };
 
                 var sp = new SecurityParameters(0, version);
@@ -131,11 +131,11 @@ describe("SecurityParameters", function () {
         });
     });
 
-    describe("AES_128_CBC cipher", function () {
+    describe("AES_128_CBC cipher", function() {
         var version = new packets.ProtocolVersion(~1, ~2);
 
-        describe("#getCipher()", function () {
-            it("should return working server-write aes-128-cbc cipher", function () {
+        describe("#getCipher()", function() {
+            it("should return working server-write aes-128-cbc cipher", function() {
                 var sp = new SecurityParameters(1, version);
                 sp.isServer = true;
                 sp.clientWriteKey = new Buffer(
@@ -160,7 +160,7 @@ describe("SecurityParameters", function () {
 
                 var encrypted = Buffer.concat([
                     cipher.update(data),
-                    cipher.final(),
+                    cipher.final()
                 ]);
 
                 var expected = new Buffer(
@@ -175,7 +175,7 @@ describe("SecurityParameters", function () {
                 encrypted.should.deep.equal(expected);
             });
 
-            it("should return working client-write aes-128-cbc cipher", function () {
+            it("should return working client-write aes-128-cbc cipher", function() {
                 var sp = new SecurityParameters(1, version);
                 sp.isServer = false;
                 sp.clientWriteKey = new Buffer(
@@ -200,7 +200,7 @@ describe("SecurityParameters", function () {
 
                 var encrypted = Buffer.concat([
                     cipher.update(data),
-                    cipher.final(),
+                    cipher.final()
                 ]);
 
                 var expected = new Buffer(
@@ -216,8 +216,8 @@ describe("SecurityParameters", function () {
             });
         });
 
-        describe("#getDecipher()", function () {
-            it("should return working client-read aes-128-cbc decipher", function () {
+        describe("#getDecipher()", function() {
+            it("should return working client-read aes-128-cbc decipher", function() {
                 var sp = new SecurityParameters(1, version);
                 sp.isServer = false;
                 sp.clientWriteKey = new Buffer(
@@ -243,7 +243,7 @@ describe("SecurityParameters", function () {
 
                 var decrypted = Buffer.concat([
                     decipher.update(data),
-                    decipher.final(),
+                    decipher.final()
                 ]);
 
                 var expected = new Buffer(
@@ -257,7 +257,7 @@ describe("SecurityParameters", function () {
                 decrypted.should.deep.equal(expected);
             });
 
-            it("should return working server-read aes-128-cbc decipher", function () {
+            it("should return working server-read aes-128-cbc decipher", function() {
                 var sp = new SecurityParameters(1, version);
                 sp.isServer = true;
                 sp.clientWriteKey = new Buffer(
@@ -283,7 +283,7 @@ describe("SecurityParameters", function () {
 
                 var decrypted = Buffer.concat([
                     decipher.update(data),
-                    decipher.final(),
+                    decipher.final()
                 ]);
 
                 var expected = new Buffer(
@@ -298,8 +298,8 @@ describe("SecurityParameters", function () {
             });
         });
 
-        describe("#calculateIncomingMac()", function () {
-            it("should calculate correct client-outgoing sha1 mac", function () {
+        describe("#calculateIncomingMac()", function() {
+            it("should calculate correct client-outgoing sha1 mac", function() {
                 var sp = new SecurityParameters(1, version);
                 sp.isServer = false;
                 sp.clientWriteMacKey = new Buffer(
@@ -332,7 +332,7 @@ describe("SecurityParameters", function () {
                 actual.should.deep.equal(expected);
             });
 
-            it("should calculate correct server-outgoing sha1 mac", function () {
+            it("should calculate correct server-outgoing sha1 mac", function() {
                 var sp = new SecurityParameters(1, version);
                 sp.isServer = true;
                 sp.clientWriteMacKey = new Buffer(
@@ -366,8 +366,8 @@ describe("SecurityParameters", function () {
             });
         });
 
-        describe("#calculateOutgoingMac()", function () {
-            it("should calculate correct client-outgoing sha1 mac", function () {
+        describe("#calculateOutgoingMac()", function() {
+            it("should calculate correct client-outgoing sha1 mac", function() {
                 var sp = new SecurityParameters(1, version);
                 sp.isServer = false;
                 sp.clientWriteMacKey = new Buffer(
@@ -387,7 +387,7 @@ describe("SecurityParameters", function () {
                     new Buffer("ce72cd1e03b57376a1732aba242fa0b6", "hex"),
                     new Buffer("2a94238f3107201b424b3d44cca9d3f5", "hex"),
                     new Buffer("e43cdf7174f4d45ab724369b7c9f18c6", "hex"),
-                    new Buffer("355295e4d1b7b4ccb700733cc3bc4958", "hex"),
+                    new Buffer("355295e4d1b7b4ccb700733cc3bc4958", "hex")
                 ];
 
                 var actual = sp.calculateOutgoingMac(data);
@@ -399,7 +399,7 @@ describe("SecurityParameters", function () {
                 actual.should.deep.equal(expected);
             });
 
-            it("should calculate correct server-outgoing sha1 mac", function () {
+            it("should calculate correct server-outgoing sha1 mac", function() {
                 var sp = new SecurityParameters(1, version);
                 sp.isServer = true;
                 sp.clientWriteMacKey = new Buffer(
@@ -419,7 +419,7 @@ describe("SecurityParameters", function () {
                     new Buffer("ce72cd1e03b57376a1732aba242fa0b6", "hex"),
                     new Buffer("2a94238f3107201b424b3d44cca9d3f5", "hex"),
                     new Buffer("e43cdf7174f4d45ab724369b7c9f18c6", "hex"),
-                    new Buffer("355295e4d1b7b4ccb700733cc3bc4958", "hex"),
+                    new Buffer("355295e4d1b7b4ccb700733cc3bc4958", "hex")
                 ];
 
                 var actual = sp.calculateOutgoingMac(data);
@@ -432,8 +432,8 @@ describe("SecurityParameters", function () {
             });
         });
 
-        describe("#digestHandshake()", function () {
-            it("should perform TLS 1.2 digest on single data", function () {
+        describe("#digestHandshake()", function() {
+            it("should perform TLS 1.2 digest on single data", function() {
                 var sp = new SecurityParameters(1, version);
 
                 var data = new Buffer(
@@ -461,7 +461,7 @@ describe("SecurityParameters", function () {
                 actual.should.deep.equal(expected);
             });
 
-            it("should perform TLS 1.2 digest on Handshake packets", function () {
+            it("should perform TLS 1.2 digest on Handshake packets", function() {
                 var sp = new SecurityParameters(1, version);
 
                 var data = [
@@ -472,7 +472,7 @@ describe("SecurityParameters", function () {
                     new Buffer("ce72cd1e03b57376a1732aba242fa0b6", "hex"),
                     new Buffer("2a94238f3107201b424b3d44cca9d3f5", "hex"),
                     new Buffer("e43cdf7174f4d45ab724369b7c9f18c6", "hex"),
-                    new Buffer("355295e4d1b7b4ccb700733cc3bc4958", "hex"),
+                    new Buffer("355295e4d1b7b4ccb700733cc3bc4958", "hex")
                 ];
 
                 for (var d in data) {
@@ -481,7 +481,7 @@ describe("SecurityParameters", function () {
                         version: version,
                         epoch: 0,
                         sequenceNumber: new Buffer([0x01]),
-                        fragment: data[d],
+                        fragment: data[d]
                     });
                     sp.digestHandshake(packet);
                 }
@@ -497,7 +497,7 @@ describe("SecurityParameters", function () {
                 actual.should.deep.equal(expected);
             });
 
-            it("should perform TLS 1.2 digest on array data", function () {
+            it("should perform TLS 1.2 digest on array data", function() {
                 var sp = new SecurityParameters(1, version);
 
                 var data = [
@@ -508,7 +508,7 @@ describe("SecurityParameters", function () {
                     new Buffer("ce72cd1e03b57376a1732aba242fa0b6", "hex"),
                     new Buffer("2a94238f3107201b424b3d44cca9d3f5", "hex"),
                     new Buffer("e43cdf7174f4d45ab724369b7c9f18c6", "hex"),
-                    new Buffer("355295e4d1b7b4ccb700733cc3bc4958", "hex"),
+                    new Buffer("355295e4d1b7b4ccb700733cc3bc4958", "hex")
                 ];
 
                 sp.digestHandshake(data);
