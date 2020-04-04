@@ -8,7 +8,6 @@ var dtls = require("./dtls");
 var HandshakeBuilder = require("./HandshakeBuilder");
 var CipherInfo = require("./CipherInfo");
 var prf = require("./prf");
-var Certificate = require("./Certificate");
 
 var DtlsHandshake = require("./packets/DtlsHandshake");
 var DtlsClientHello = require("./packets/DtlsClientHello");
@@ -22,6 +21,7 @@ var DtlsProtocolVersion = require("./packets/DtlsProtocolVersion");
 var DtlsRandom = require("./packets/DtlsRandom");
 var DtlsExtension = require("./packets/DtlsExtension");
 const { pki } = require("node-forge");
+const { parseCert } = require("./parsePem");
 
 /* Note the methods in this class aren't grouped with similar methods. Instead
  * the handle_ and send_ methods follow the logical order as defined in the
@@ -234,27 +234,8 @@ ClientHandshakeHandler.prototype.handle_serverHelloDone = function(
 
 ClientHandshakeHandler.prototype.send_keyExchange = function() {
     log.info("Constructing key exchange");
-    const cert = pki.certificateFromPem(`-----BEGIN CERTIFICATE-----
-    MIIDXTCCAkWgAwIBAgIJAOzyLnW7y+GuMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
-    BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
-    aWRnaXRzIFB0eSBMdGQwHhcNMTUwNDEzMTc1NDQyWhcNMTUwNTEzMTc1NDQyWjBF
-    MQswCQYDVQQGEwJBVTETMBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50
-    ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB
-    CgKCAQEAt3c9577Z/0RllHEXLnH1JO6kptmZW9r9Zra6yy7uAORlbjXhvGTmwTZ7
-    BF56GTXyVf65iDxJ3ZLR/Z4SqJMIVYQxZvQy4Tvog6Ucs4RVFKaXz9BF0qugnBF1
-    lEFGrOhxKAu6NAfNAprW9CO6UMtC7Cg4N5kPwbmIOEAZeuP9ykweKZbIX+0qwxqg
-    697dD4HBO1yDBOsdxdSASaJuRb9W3N9MV4ao2Juf6wWksStDXhjv5WHMAhBut1Zy
-    XkEVQeYr2H6QGLGrDObhjUd/g/JLzrNPqBthgfkNKp4WLqVtqwRZY93PVYJZDgTd
-    ObZ7zgOcahCNTJI/AAxwXJzDmLiDuQIDAQABo1AwTjAdBgNVHQ4EFgQUOtqR6WXi
-    XaRpl5cHRU/oYt16OIwwHwYDVR0jBBgwFoAUOtqR6WXiXaRpl5cHRU/oYt16OIww
-    DAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAjkfDzaSpDEZHg1YKyKar
-    vcx4UiK09DIhxdUIN0xyNL9Ds52EIHXgKIio3h7dtvFzGd+Pt+RzpCsQxqKwxWO4
-    1Au5PLD/rdgO4/KVKlFvpRSTozw8edO7mV26RJospqHRtgSA8/GE4irnWISVhY9E
-    2eFBjnaIRwTiG/XyknCMngP3/zpEfdfsc0aizD0YcHaDByPlXlOa0dxV7BU/TAkg
-    Ml9YvI4gGq+xk4p+FAewr1smOAcR/RUqxpoadgsALzEpuDZ4ZW66wlrw0ubr1SjH
-    7Br2pLaTuHUwu4sD60BchbLROdltyFrimpcD6T9QlWgVtVW/hpE90m8LmgVNEtg8
-    wg==
-    -----END CERTIFICATE-----`);
+    const pem = parseCert();
+    const cert = pki.certificateFromPem(pem);
     const publicKey = pki.publicKeyToRSAPublicKeyPem(cert.publicKey);
     const exchangeKeys = crypto.publicEncrypt(
         { key: publicKey, padding: constants.RSA_PKCS1_PADDING },

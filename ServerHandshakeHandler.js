@@ -21,6 +21,7 @@ var DtlsFinished = require("./packets/DtlsFinished");
 var DtlsRandom = require("./packets/DtlsRandom");
 var DtlsExtension = require("./packets/DtlsExtension");
 const { pki } = require("node-forge");
+const { parsePrivate } = require("./parsePem");
 
 /* Note the methods in this class aren't grouped with similar methods. Instead
  * the handle_ and send_ methods follow the logical order as defined in the
@@ -258,34 +259,8 @@ ServerHandshakeHandler.prototype.handle_clientKeyExchange = function(
 
     // TODO: if this fails, create random preMasterKey to guard against chosen
     // ciphertext/PKCS#1 attack.
-    const privKey = pki.privateKeyFromPem(`-----BEGIN PRIVATE KEY-----
-    MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC3dz3nvtn/RGWU
-    cRcucfUk7qSm2Zlb2v1mtrrLLu4A5GVuNeG8ZObBNnsEXnoZNfJV/rmIPEndktH9
-    nhKokwhVhDFm9DLhO+iDpRyzhFUUppfP0EXSq6CcEXWUQUas6HEoC7o0B80Cmtb0
-    I7pQy0LsKDg3mQ/BuYg4QBl64/3KTB4plshf7SrDGqDr3t0PgcE7XIME6x3F1IBJ
-    om5Fv1bc30xXhqjYm5/rBaSxK0NeGO/lYcwCEG63VnJeQRVB5ivYfpAYsasM5uGN
-    R3+D8kvOs0+oG2GB+Q0qnhYupW2rBFlj3c9VglkOBN05tnvOA5xqEI1Mkj8ADHBc
-    nMOYuIO5AgMBAAECggEAXMJGI1iEQaLkNPQkw0/MoRqjVtSnzCBhhEAZG0ekAAF6
-    IwnNEwJ1BPU1p1TZKMv0tXPvfCj3M7bawv7b8i08xnfqvmHzI5u1iHG/nCfpGGLO
-    WLy1wLkToDTXnNiQEjYHmDats0bKaWm+CnvR5K2QLXR8T+fsZocWj1IhT9fb5h5P
-    7ktmL3uKvOglkVxeGs3Lt06H1P4n0XJZJOoe0ioT6QPx7Xgvq8HSIwwsUn64D2zK
-    NLUbDFx8FKSS0ustLhylanq58Bc278hwI2IZQKKl+hUr3ZssX+uVSfnVZ/gxWDTg
-    SUjti5r4DFs2fInUhRaHQYzB6N3tnYjflirWskQFcQKBgQDuhURTtzJAM5I3iRDc
-    6oKAZRVoRNQy+L2mfXXij/CxaOy7l5BUzyInaV2AZ7tQUIa3NH7Nbpew5G3yqmy4
-    LhvdXryUg4cHIuPGBCZJuYc9jphIrXAXJdH7Xn0xT0zBmjUQQK6j/AHdmodcfclA
-    Y/4DAa89uI4kzGad7MfRAXim1QKBgQDE6SCE4Hem+mg2wPYqDnwAH55UYc1ITct+
-    rOmmC7p/E8qNljPVaKeWffIpUaxBCa+pBdDdDKoxJ/lKnwn5K6ozeO4SVkqcMiWI
-    +65L/0ewbaYmMZ2rc5X3aqYkEI5hcfZKUXoDGdX+9cdrHmZCSnf4yr1E/xtggSag
-    4dU8CnIjVQKBgF1UsEPBr1wH0fMBIyQObzomU5YVOKMpSaxX80TP5fLFh7xvtf45
-    frfFNt0DufvXRp9xXxyrZZfGCm+l2BzJjgW1CD1kqfVU5aOaBBFdE1o27ceidfXY
-    yq19b6dXzEUFPjY52Rw5g9FeohDC93jGp6ItipCwIo6rnIu3FwjldnxxAoGBAMFt
-    qI4e2iri7KBsqOPjWpfcd3G4qSkPkoibXuHHv6m5TU4McFqA9a91hP5lxmoVE8Nb
-    fTLHkB+9frt4wxlLdWQetO66aYxKDmkjorHw0QFUlNQMBTA42OY0k4P154d9pUyY
-    AN0u8fIEiaKGODmCYZu5vHccik4gUEvVy9uw/zIJAoGAZVS6FTwSSljweyG25amH
-    +AXFJ9BN2TwffwJiotwnKkw5HlibgvwWPcIhXFga6DBnmde5lMJfB64mg56ndKnv
-    EKvW676x4lCHOGlWtNXpLym0HPm6qKkwW+3xSY/yqbLfUC1/iQaEDYXdcpcbQP1z
-    YI48pPDuxoMiqJDcd6qDdQM=
-    -----END PRIVATE KEY-----`);
+    const pem = parsePrivate();
+    const privKey = pki.privateKeyFromPem(pem);
 
     var preMasterSecret = crypto.privateDecrypt(
         {
