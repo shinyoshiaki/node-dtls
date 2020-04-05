@@ -10,6 +10,7 @@
   "dependencies": {
     "asn1.js": "^1.0.3",
     "logg": "^0.3.0",
+    "node-forge": "^0.9.1",
     "parse-asn1": "^3.0.0"
   },
   "devDependencies": {
