@@ -23,7 +23,7 @@ describe("openssl", function () {
             "-state",
             "-msg",
             "-debug",
-            "-dtls1",
+            "-dtls1_2",
         ]);
 
         server.stdout.setEncoding("ascii");
@@ -40,7 +40,7 @@ describe("openssl", function () {
                 "s_client",
                 "-port",
                 24126,
-                "-dtls1",
+                "-dtls1_2",
                 "-state",
                 "-msg",
                 "-debug",
@@ -79,7 +79,7 @@ describe("openssl", function () {
                     "s_client",
                     "-connect",
                     "127.0.0.1:24124",
-                    "-dtls1",
+                    "-dtls1_2",
                 ]);
 
                 client.stdout.setEncoding("ascii");
