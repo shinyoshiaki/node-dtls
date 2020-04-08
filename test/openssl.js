@@ -7,8 +7,8 @@ var dtls = require("../");
 
 var cert = fs.readFileSync(__dirname + "/assets/certificate.pem");
 
-describe("openssl", function() {
-    it("should validate itself", function(done) {
+describe("openssl", function () {
+    it("should validate itself", function (done) {
         this.slow(500);
 
         // Spawn the client a bit later. Give the UDP port time to init.
@@ -23,11 +23,11 @@ describe("openssl", function() {
             "-state",
             "-msg",
             "-debug",
-            "-dtls1"
+            "-dtls1",
         ]);
 
         server.stdout.setEncoding("ascii");
-        server.stdout.on("data", function(data) {
+        server.stdout.on("data", function (data) {
             if (data.indexOf("### client->server\n") !== -1) {
                 server.stdin.write("### server->client\n");
             }
@@ -35,7 +35,7 @@ describe("openssl", function() {
 
         // Spawn the client a bit later. Give the UDP port time to init.
         var client;
-        setTimeout(function() {
+        setTimeout(function () {
             client = spawn("openssl", [
                 "s_client",
                 "-port",
@@ -43,11 +43,11 @@ describe("openssl", function() {
                 "-dtls1",
                 "-state",
                 "-msg",
-                "-debug"
+                "-debug",
             ]);
 
             client.stdout.setEncoding("ascii");
-            client.stdout.on("data", function(data) {
+            client.stdout.on("data", function (data) {
                 if (data.indexOf("### server->client\n") !== -1) {
                     done();
                     client.kill();
@@ -56,34 +56,34 @@ describe("openssl", function() {
             });
         }, 50);
 
-        setTimeout(function() {
+        setTimeout(function () {
             client.stdin.write("### client->server\n");
         }, 100);
     });
 
-    describe("s_client", function() {
-        it("should connect to node-dtls server with DTLSv1", function(done) {
+    describe("s_client", function () {
+        it("should connect to node-dtls server with DTLSv1", function (done) {
             this.slow(150);
 
             var server = dtls.createServer({
                 type: "udp4",
                 key: cert,
-                cert: cert
+                cert: cert,
             });
             server.bind(24124);
 
             // Spawn the client a bit later. Give the UDP port time to init.
             var client;
-            setTimeout(function() {
+            setTimeout(function () {
                 client = spawn("openssl", [
                     "s_client",
                     "-connect",
                     "127.0.0.1:24124",
-                    "-dtls1"
+                    "-dtls1",
                 ]);
 
                 client.stdout.setEncoding("ascii");
-                client.stdout.on("data", function(data) {
+                client.stdout.on("data", function (data) {
                     if (data.indexOf("### node->openssl\n") !== -1) {
                         client.kill();
                         done();
@@ -91,9 +91,9 @@ describe("openssl", function() {
                 });
             }, 10);
 
-            server.on("secureConnection", function(socket) {
+            server.on("secureConnection", function (socket) {
                 client.stdin.write("### openssl->node\n");
-                socket.on("message", function(msg) {
+                socket.on("message", function (msg) {
                     msg.should.deep.equal(new Buffer("### openssl->node\n"));
                     socket.send(new Buffer("### node->openssl\n"));
                 });
@@ -101,8 +101,8 @@ describe("openssl", function() {
         });
     });
 
-    describe("s_server", function() {
-        it("should accept node-dtls client with DTLSv1", function(done) {
+    describe("s_server", function () {
+        it("should accept node-dtls client with DTLSv1", function (done) {
             this.slow(300);
 
             // Spawn the client a bit later. Give the UDP port time to init.
@@ -114,21 +114,21 @@ describe("openssl", function() {
                 __dirname + "/assets/certificate.pem",
                 "-cert",
                 __dirname + "/assets/certificate.pem",
-                "-dtls1"
+                "-dtls1",
             ]);
 
             server.stdout.setEncoding("ascii");
-            server.stdout.on("data", function(data) {
+            server.stdout.on("data", function (data) {
                 if (data === "### node->openssl\n") {
                     server.stdin.write("### openssl->node\n");
                 }
             });
 
-            setTimeout(function() {
-                dtls.connect(24125, "localhost", "udp4", function(client) {
+            setTimeout(function () {
+                dtls.connect(24125, "localhost", "udp4", function (client) {
                     client.send(new Buffer("### node->openssl\n"));
 
-                    client.on("message", function(msg) {
+                    client.on("message", function (msg) {
                         msg.should.deep.equal(
                             new Buffer("### openssl->node\n")
                         );
